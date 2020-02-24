@@ -3,4 +3,10 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string name="help_text_analyze">Analyze the music</string>
+    <string name="genre_text">Genre</string>
+    <string name="classical_genre">Classical</string>
+    <string name="confidence_text">Confidence:</string>
+    <string name="help_text_incorrect_tagging">Incorrect tagging</string>
+    <string name="help_text_tap_the_button_to_analyze_music">Tap the button to analyze music.</string>
 </resources>
