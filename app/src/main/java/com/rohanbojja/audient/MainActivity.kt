@@ -12,6 +12,7 @@ import com.google.firebase.ml.common.modeldownload.FirebaseModelDownloadConditio
 import com.google.firebase.ml.common.modeldownload.FirebaseModelManager
 import com.google.firebase.ml.custom.*
 import kotlinx.android.synthetic.main.fragment_home.*
+import java.util.*
 
 
 class MainActivity : AppCompatActivity() {
@@ -66,6 +67,8 @@ class MainActivity : AppCompatActivity() {
             songNum+=1
         }
         listenButton.setOnClickListener {
+            confidenceLabel.text = ""
+            songNum+=1
             incorrecttagButton.alpha = 1f
             incorrecttagButton.isClickable = true
             //Code for listening to music
@@ -97,7 +100,7 @@ class MainActivity : AppCompatActivity() {
                        x+=1
                    }
                    //val input = preInput.toTypedArray()
-                   Log.d("HUSKY", "${input[0][1]}")
+                   Log.d("HUSKY", "IN: ${input[0].contentToString()}")
                    val inputs = FirebaseModelInputs.Builder()
                        .add(input) // add() as many input arrays as your model requires
                        .build()
@@ -107,6 +110,7 @@ class MainActivity : AppCompatActivity() {
                    interpreter?.run(inputs, inputOutputOptions)?.addOnSuccessListener { result ->
                        Log.d("HUSKY2", "GGWP")
                        val output = result.getOutput<Array<FloatArray>>(0)
+                       Log.d("HUSKY2", "OUT: ${output[0].contentToString()}")
                        val probabilities = output[0]
                        var bestMatch = 0f
                        var bestMatchIndex = 0
@@ -116,10 +120,11 @@ class MainActivity : AppCompatActivity() {
                                bestMatchIndex = i
                            }
                            Log.d("HUSKY2", "${labelArray[i]} ${probabilities[i]}")
+                           confidenceLabel.text = "${confidenceLabel.text} ${labelArray[i]} ${probabilities[i]}\n"
                            genreLabel.text = labelArray[i]
                        }
-                       genreLabel.text = labelArray[bestMatchIndex].capitalize()
-                       confidenceLabel.text = probabilities[bestMatchIndex].toString()
+                       genreLabel.text = "${labelArray[bestMatchIndex].capitalize()} ${songNum}"
+                       //confidenceLabel.text = probabilities[bestMatchIndex].toString()
 
                        // ...
                    }?.addOnFailureListener { e ->
