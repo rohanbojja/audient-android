@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.rohanbojja.audient.R
+import kotlinx.android.synthetic.main.fragment_home.*
 
 class DashboardFragment : Fragment() {
 
@@ -27,5 +28,14 @@ class DashboardFragment : Fragment() {
             textView.text = it
         })
         return root
+    }
+
+    override fun onStart() {
+        super.onStart()
+        listenButton.alpha = .5f
+        listenButton.isClickable = false
+        incorrecttagButton.alpha = 0.5f
+        incorrecttagButton.isClickable = false
+
     }
 }
