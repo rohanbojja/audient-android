@@ -1,4 +1,3 @@
-### Update README.md
 # audient-android
 Android application to utilize the generated model
 
