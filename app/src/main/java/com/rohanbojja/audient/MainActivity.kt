@@ -64,8 +64,22 @@ class MainActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
        // val output = getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)?.absolutePath + "/iam.wav"
-        incorrecttagButton.setOnClickListener {
-            //val bytes = File(output!!).inputStream()
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ) {
+            val permissions = arrayOf(android.Manifest.permission.RECORD_AUDIO, android.Manifest.permission.WRITE_EXTERNAL_STORAGE, android.Manifest.permission.READ_EXTERNAL_STORAGE)
+            ActivityCompat.requestPermissions(this, permissions,0)
+        }else{
+            listenButton.alpha = 1f
+            listenButton.isClickable = true
+        }
+        }
+
+    }
+
+// ALTERNATE Network Libs
+
+//val bytes = File(output!!).inputStream()
 
 //            val job = GlobalScope.launch{
 //                val file = File(output)
@@ -134,16 +148,3 @@ class MainActivity : AppCompatActivity() {
 //                    // called when request is retried
 //                }
 //            })
-        }
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ) {
-            val permissions = arrayOf(android.Manifest.permission.RECORD_AUDIO, android.Manifest.permission.WRITE_EXTERNAL_STORAGE, android.Manifest.permission.READ_EXTERNAL_STORAGE)
-            ActivityCompat.requestPermissions(this, permissions,0)
-        }else{
-            listenButton.alpha = 1f
-            listenButton.isClickable = true
-        }
-        }
-
-    }

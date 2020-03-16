@@ -154,12 +154,17 @@ class HomeFragment : Fragment() {
     }
 
     override fun onStart() {
+        progressBar.max = 20000
+        progressBar.isIndeterminate = true
+        progressBar.visibility = View.GONE
+        progressBar.progress = 0
         output = context!!.getExternalFilesDir(DIRECTORY_DOWNLOADS)?.absolutePath + "/iam.wav"
         Log.d("HUSKY","${output}")
         waveRecorder = WaveRecorder(output!!)
         waveRecorder.noiseSuppressorActive = true
         waveRecorder.onAmplitudeListener = {
             Log.i("AMPCHANGE", "Amplitude : $it")
+            progressBar.progress = it
         }
         super.onStart()
 //        listenButton.alpha = .5f
@@ -184,12 +189,20 @@ class HomeFragment : Fragment() {
         listenButton.setOnClickListener {
             if(!state){
                 confidenceLabel.text = ""
+                progressBar.visibility = View.VISIBLE
                 startRecording()
             }else{
                 doAsync {
                     stopRecording()
+                    progressBar.isIndeterminate = true
+                    progressBar.progress = 0
                     uiThread {
-                        getInference()
+                        doAsync {
+                            getInference()
+                            uiThread {
+                                progressBar.visibility = View.GONE
+                            }
+                        }
                     }
                 }
             }

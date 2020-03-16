@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 class DashboardViewModel : ViewModel() {
 
     private val _text = MutableLiveData<String>().apply {
-        value = "PyTorch"
+        value = "Log:"
     }
     val text: LiveData<String> = _text
 }
