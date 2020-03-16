@@ -63,7 +63,7 @@ class MainActivity : AppCompatActivity() {
     }
     override fun onStart() {
         super.onStart()
-        val output = getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)?.absolutePath + "/iam.wav"
+       // val output = getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)?.absolutePath + "/iam.wav"
         incorrecttagButton.setOnClickListener {
             //val bytes = File(output!!).inputStream()
 
@@ -89,19 +89,19 @@ class MainActivity : AppCompatActivity() {
 
 
 
-            Fuel.upload("https://audient.herokuapp.com/receiveWav")
-                .add(FileDataPart(File(output),filename = "jam.wav", name="file"))
-                .also { println(it) }
-                .response { request, response, result ->
-                    Log.d("HUSKY", "HTTP 200")
-                    println("REQ: ${request}")
-                    println("RES: ${response}")
-                    val (bytes, error) = result
-                    if (bytes != null) {
-                        println("[response bytes] ${String(bytes)}")
-                    }
-
-                }
+//            Fuel.upload("http://audient.pagekite.me/receiveWav")
+//                .add(FileDataPart(File(output),filename = "jam.wav", name="file"))
+//                .also { println(it) }
+//                .response { request, response, result ->
+//                    Log.d("HUSKY", "HTTP 200")
+//                    println("REQ: ${request}")
+//                    println("RES: ${response}")
+//                    val (bytes, error) = result
+//                    if (bytes != null) {
+//                        println("[response bytes] ${String(bytes)}")
+//                    }
+//
+//                }
 
 //
 //            val client = AsyncHttpClient()

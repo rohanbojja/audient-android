@@ -18,39 +18,32 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/listenButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_margin="16dp"
         android:layout_marginTop="32dp"
-        android:text="@string/help_text_analyze"
+        android:src="@drawable/outline_album_white_48"
+        app:fabCustomSize="128dp"
+        app:fabSize="normal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/confidenceLabel" />
-
-    <TextView
-        android:id="@+id/genreText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="@string/genre_text"
-        android:textColor="#3C3F41"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_home" />
+        app:layout_constraintTop_toBottomOf="@+id/confidenceLabel"
+        app:maxImageSize="32dp" />
 
     <TextView
         android:id="@+id/genreLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="24dp"
         android:text="@string/classical_genre"
         android:textColor="@android:color/widget_edittext_dark"
         android:textSize="36sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/genreText" />
+        app:layout_constraintTop_toBottomOf="@+id/text_home" />
 
     <TextView
         android:id="@+id/confidenceLabel"
@@ -67,10 +60,8 @@
         android:id="@+id/incorrecttagButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:layout_marginBottom="32dp"
+        android:layout_marginTop="24dp"
         android:text="@string/help_text_incorrect_tagging"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView4" />
@@ -83,27 +74,16 @@
         android:text="@string/help_text_tap_the_button_to_analyze_music"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/stopButton" />
-
-    <Button
-        android:id="@+id/stopButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="StOP"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/listenButton" />
 
     <Button
         android:id="@+id/playbackButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"
+        android:layout_marginTop="32dp"
         android:text="Play"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/listenButton"
-        app:layout_constraintTop_toTopOf="@+id/listenButton" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/incorrecttagButton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -32,10 +32,6 @@ class DashboardFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        listenButton.alpha = .5f
-        listenButton.isClickable = false
-        incorrecttagButton.alpha = 0.5f
-        incorrecttagButton.isClickable = false
 
     }
 }

@@ -15,14 +15,11 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.core.FileDataPart
+import com.github.squti.androidwaverecorder.WaveRecorder
 import com.google.firebase.ml.common.modeldownload.FirebaseModelDownloadConditions
 import com.google.firebase.ml.common.modeldownload.FirebaseModelManager
 import com.google.firebase.ml.custom.*
-import com.loopj.android.http.AsyncHttpClient
-import com.loopj.android.http.AsyncHttpResponseHandler
-import com.loopj.android.http.RequestParams
 import com.rohanbojja.audient.R
-import cz.msebera.android.httpclient.Header
 import kotlinx.android.synthetic.main.fragment_home.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
@@ -32,33 +29,19 @@ import java.io.IOException
 
 class HomeFragment : Fragment() {
     private var output: String? = null
-    private var mediaRecorder: MediaRecorder? = null
+    private lateinit var waveRecorder: WaveRecorder
     private var state: Boolean = false
     private var recordingStopped: Boolean = false
     private lateinit var homeViewModel: HomeViewModel
     private fun startRecording() {
-            try {
-            mediaRecorder?.prepare()
-            mediaRecorder?.start()
-            state = true
-            Toast.makeText(context, "Recording started!", Toast.LENGTH_SHORT).show()
-            Log.d("Husky","BSTATE: ${state}")
-        } catch (e: IllegalStateException) {
-            e.printStackTrace()
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
+        state = true
+        waveRecorder.startRecording()
     }
 
     private fun stopRecording(){
         Log.d("Husky","STATE: ${state}")
-        if(state){
-            mediaRecorder?.stop()
-            mediaRecorder?.release()
-            state = false
-        }else{
-            Toast.makeText(context, "You are not recording right now!", Toast.LENGTH_SHORT).show()
-        }
+        state = false
+        waveRecorder.stopRecording()
     }
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -91,8 +74,9 @@ class HomeFragment : Fragment() {
                 listenButton.alpha = 1f
                 listenButton.isClickable = true
             }
+
         Fuel.upload("https://audient.herokuapp.com/receiveWav")
-            .add(FileDataPart(File(output),filename = "jam.mp4", name="file"))
+            .add(FileDataPart(File(output),filename = "jam.wav", name="file"))
             .also { println(it) }
             .response { request, response, result ->
                 Log.d("HUSKY", "HTTP 200")
@@ -170,18 +154,13 @@ class HomeFragment : Fragment() {
     }
 
     override fun onStart() {
-        mediaRecorder = MediaRecorder()
-        output = context!!.getExternalFilesDir(DIRECTORY_DOWNLOADS)?.absolutePath + "/iam.m4a"
-        val fileSong = File(output)
-        if(fileSong.exists()){
-            fileSong.delete()
-        }
+        output = context!!.getExternalFilesDir(DIRECTORY_DOWNLOADS)?.absolutePath + "/iam.wav"
         Log.d("HUSKY","${output}")
-        mediaRecorder?.setAudioSource(MediaRecorder.AudioSource.MIC)
-        mediaRecorder?.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
-        mediaRecorder?.setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
-        mediaRecorder?.setOutputFile(output)
-
+        waveRecorder = WaveRecorder(output!!)
+        waveRecorder.noiseSuppressorActive = true
+        waveRecorder.onAmplitudeListener = {
+            Log.i("AMPCHANGE", "Amplitude : $it")
+        }
         super.onStart()
 //        listenButton.alpha = .5f
 //        listenButton.isClickable = false
@@ -191,27 +170,29 @@ class HomeFragment : Fragment() {
 
 
         playbackButton.setOnClickListener {
-            val mediaPlayer = MediaPlayer()
-
-            mediaPlayer.setDataSource(output!!)
-            mediaPlayer.prepare()
-            mediaPlayer.start()
-        }
-
-        stopButton.setOnClickListener {
             doAsync {
-                stopRecording()
+                confidenceLabel.text = ""
+                getInference()
                 uiThread {
-                    getInference()
+                    val mediaPlayer = MediaPlayer()
+                    mediaPlayer.setDataSource(output!!)
+                    mediaPlayer.prepare()
+                    mediaPlayer.start()
                 }
             }
         }
         listenButton.setOnClickListener {
-            confidenceLabel.text = ""
-//            incorrecttagButton.alpha = 1f
-//            incorrecttagButton.isClickable = true
-            //Code for listening to music
-            startRecording()
+            if(!state){
+                confidenceLabel.text = ""
+                startRecording()
+            }else{
+                doAsync {
+                    stopRecording()
+                    uiThread {
+                        getInference()
+                    }
+                }
+            }
         }
     }
 }
