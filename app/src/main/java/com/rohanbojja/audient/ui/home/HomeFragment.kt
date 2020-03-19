@@ -24,7 +24,6 @@ import kotlinx.android.synthetic.main.fragment_home.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import java.io.File
-import java.io.IOException
 
 
 class HomeFragment : Fragment() {
@@ -128,14 +127,29 @@ class HomeFragment : Fragment() {
                                 val probabilities = output[0]
                                 var bestMatch = 0f
                                 var bestMatchIndex = 0
+                                var index = 0
                                 for (i in probabilities.indices){
                                     if(probabilities[i]>bestMatch){
                                         bestMatch = probabilities[i]
                                         bestMatchIndex = i
                                     }
                                     Log.d("HUSKY2", "${labelArray[i]} ${probabilities[i]}")
-                                    confidenceLabel.text = "${confidenceLabel.text} ${labelArray[i]} ${probabilities[i]}\n"
-                                    genreLabel.text = labelArray[i]
+                                    //confidenceLabel.text = "${confidenceLabel.text} ${labelArray[i]} ${probabilities[i]}\n"
+                                    //genreLabel.text = labelArray[i]
+                                    when (index){
+                                        0 -> { bluesProgress.isIndeterminate=false; bluesProgress.secondaryProgress=0; bluesProgress.max = 100; bluesProgress.progress = (probabilities[i]*100).toInt(); }
+                                        1 -> { classicalProgress.isIndeterminate=false; classicalProgress.secondaryProgress=0; classicalProgress.max = 100; classicalProgress.progress = (probabilities[i]*100).toInt(); }
+                                        2 -> { countryProgress.isIndeterminate=false; countryProgress.secondaryProgress=0; countryProgress.max = 100; countryProgress.progress = (probabilities[i]*100).toInt(); }
+                                        3 -> { discoProgress.isIndeterminate=false; discoProgress.secondaryProgress=0; discoProgress.max = 100; discoProgress.progress = (probabilities[i]*100).toInt(); }
+                                        4 -> { hiphopProgress.isIndeterminate=false; hiphopProgress.secondaryProgress=0; hiphopProgress.max = 100; hiphopProgress.progress = (probabilities[i]*100).toInt(); }
+                                        5 -> { jazzProgress.isIndeterminate=false; jazzProgress.secondaryProgress=0; jazzProgress.max = 100; jazzProgress.progress = (probabilities[i]*100).toInt(); }
+                                        6 -> { metalProgress.isIndeterminate=false; metalProgress.secondaryProgress=0; metalProgress.max = 100; metalProgress.progress = (probabilities[i]*100).toInt(); }
+                                        7 -> { popProgress.isIndeterminate=false; popProgress.secondaryProgress=0; popProgress.max = 100; popProgress.progress = (probabilities[i]*100).toInt(); }
+                                        8 -> { reggaeProgress.isIndeterminate=false; reggaeProgress.secondaryProgress=0; reggaeProgress.max = 100; reggaeProgress.progress = (probabilities[i]*100).toInt(); }
+                                        9 -> { rockProgress.isIndeterminate=false; rockProgress.secondaryProgress=0; rockProgress.max = 100; rockProgress.progress = (probabilities[i]*100).toInt(); }
+                                    }
+                                    println("GENRE: ${labelArray[index]} Progress: ${(probabilities[i]*100).toInt()}")
+                                    index+=1
                                 }
                                 genreLabel.text = labelArray[bestMatchIndex].capitalize()
                                 //confidenceLabel.text = probabilities[bestMatchIndex].toString()
@@ -176,7 +190,6 @@ class HomeFragment : Fragment() {
 
         playbackButton.setOnClickListener {
             doAsync {
-                confidenceLabel.text = ""
                 getInference()
                 uiThread {
                     val mediaPlayer = MediaPlayer()
@@ -188,7 +201,6 @@ class HomeFragment : Fragment() {
         }
         listenButton.setOnClickListener {
             if(!state){
-                confidenceLabel.text = ""
                 progressBar.visibility = View.VISIBLE
                 startRecording()
             }else{
